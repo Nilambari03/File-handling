@@ -1,0 +1,145 @@
+#include <stdio.h>
+struct passenger
+{
+ int ticket_no;
+ char name[20];
+ int sdate,smonth,syear;
+ int rdate,rmonth,ryear;
+};
+int i; FILE *fp;
+struct passenger p[100];
+void acc(struct passenger p[100],int n)
+{ printf("\n Enter the total number of passengers:");
+  scanf("%d",&n);
+  for(i=0;i<n;i++)
+  {
+    printf("\nEnter the ticket no. of passenger %d:",i+1);
+    scanf("%d",&p[i].ticket_no);
+    printf("\nEnter name of passenger %d:",i+1);
+    scanf(" %s",p[i].name);
+    printf("\nEnter start date of journey of passenger %d(dd/mm/yyyy):",i+1);
+    scanf("%d/%d/%d",&p[i].sdate,&p[i].smonth,&p[i].syear);
+    printf("\nEnter return date of passenger %d(dd/mm/yyyy):",i+1);
+    scanf("%d/%d/%d",&p[i].rdate,&p[i].rmonth,&p[i].ryear);
+  }
+}
+void write(struct passenger p[100],int n)
+{ 
+  fp=fopen("input.txt","a");
+  if(fp==NULL)
+  {
+    printf("\nError...");
+  }
+  else{
+    for(i=0;i<n;i++)
+    { 
+      fprintf(fp,"%d  %s  %d/%d/%d  %d/%d/%d",p[i].ticket_no,p[i].name,p[i].sdate,p[i].smonth,p[i].syear,p[i].rdate,p[i].rmonth,p[i].ryear); 
+      fputs("\n",fp);
+    }
+  }
+  fclose(fp);
+}
+void display(struct passenger p[100],int n)
+{ 
+  fp=fopen("input.txt","r");
+  if(fp==NULL){
+    printf("\nError...");
+  }else{
+    while(fscanf(fp,"%d  %s  %d/%d/%d  %d/%d/%d",&p[i].ticket_no,p[i].name,&p[i].sdate,&p[i].smonth,&p[i].syear,&p[i].rdate,&p[i].rmonth,&p[i].ryear)!=EOF)
+      {
+         printf("\n%d %s  %d/%d/%d  %d/%d/%d",p[i].ticket_no,p[i].name,p[i].sdate,p[i].smonth,p[i].syear,p[i].rdate,p[i].rmonth,p[i].ryear);
+      }
+  }
+  fclose(fp);
+}
+void read(struct passenger p[100],int n, int x)
+{ 
+  fp=fopen("input.txt","r");
+  if(fp==NULL){
+   printf("\nError...");
+} else{
+  while(fscanf(fp,"%d  %s  %d/%d/%d  %d/%d/%d",&p[i].ticket_no,p[i].name,&p[i].sdate,&p[i].smonth,&p[i].syear,&p[i].rdate,&p[i].rmonth,&p[i].ryear)!=EOF )
+  { if(p[i].ticket_no == x)
+   { 
+     printf("%d  %s  %d/%d/%d  %d/%d/%d",p[i].ticket_no,p[i].name,p[i].sdate,p[i].smonth,p[i].syear,p[i].rdate,p[i].rmonth,p[i].ryear);  }
+  }
+  fclose(fp);}
+}
+void del(struct passenger p[100],int n)
+{ int x,count;
+  fp=fopen("input.txt","r");
+  FILE *f;
+  f=fopen("data.txt","w");
+  printf("\nEnter the ticket no. you want to delete :");
+  scanf("%d",&x);
+  if(fp==NULL || f==NULL){
+      printf("\nError...");
+      return;
+    }
+    else{
+  while(fscanf(fp,"%d  %s  %d/%d/%d  %d/%d/%d",&p[i].ticket_no,p[i].name,&p[i].sdate,&p[i].smonth,&p[i].syear,&p[i].rdate,&p[i].rmonth,&p[i].ryear)!=EOF)
+  {
+    if(p[i].ticket_no!=x)
+      {
+      fprintf(f,"%d  %s  %d/%d/%d  %d/%d/%d",p[i].ticket_no,p[i].name,p[i].sdate,p[i].smonth,p[i].syear,p[i].rdate,p[i].rmonth,p[i].ryear); fputs("\n",f);
+      } } }
+      fclose(fp);
+      fclose(f);
+    fp=fopen("input.txt","w");
+    f=fopen("data.txt","r");
+    if(fp==NULL || f==NULL){
+      printf("\nError...");
+      return;
+    }
+    else{
+      while(fscanf(f,"%d  %s  %d/%d/%d  %d/%d/%d",&p[i].ticket_no,p[i].name,&p[i].sdate,&p[i].smonth,&p[i].syear,&p[i].rdate,&p[i].rmonth,&p[i].ryear)!=EOF)
+      {
+        fprintf(fp,"%d  %s  %d/%d/%d  %d/%d/%d\n",p[i].ticket_no,p[i].name,p[i].sdate,p[i].smonth,p[i].syear,p[i].rdate,p[i].rmonth,p[i].ryear); 
+        fputs("\n",f);
+      }
+    }
+    fclose(fp); 
+    fclose(f);
+    remove("data.txt");
+}
+int main(void) {
+  int n,ch,x;
+  do{
+  printf("\n*************************************************************");
+  printf("\n1.Accept the information.");
+  printf("\n2.Write the information to file.");
+  printf("\n3.Display the information.");
+  printf("\n4.Read particular passengers information.");
+  printf("\n5.Delete/modify the information.");
+  printf("\n6.Exit.");
+  printf("\nEnter the choice to show the particular output:");
+  scanf("%d",&ch);
+  switch(ch)
+  {
+    case 1: printf("\n*************************************************************");
+            acc(p,n);
+            break;
+    case 2: printf("\n*************************************************************");
+            write(p,n);
+            break;
+    case 3: printf("\n*************************************************************");
+            display(p,n);
+            break;
+    case 4: printf("\n*************************************************************");
+            printf("\nEnter the ticket no. to read the data of particular passenger:");
+            scanf("%d",&x);
+            read(p,n,x);
+            break;
+    case 5: printf("\n*************************************************************");
+            del(p,n);
+            break;
+    case 6: printf("\n*************************************************************");
+            printf("\nThank You!!");
+            goto label; 
+    default : printf("Invalid choice..Please re-enter.");
+              break;
+  }} while(ch!=6);
+  label:
+  return 0;
+}
+
